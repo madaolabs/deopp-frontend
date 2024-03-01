@@ -3,8 +3,8 @@ import { dir } from "i18next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Zetascritpion",
-  description: "Inscription site",
+  title: "",
+  description: "",
 };
 
 export default function RootLayout({
