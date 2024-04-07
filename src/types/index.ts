@@ -7,7 +7,7 @@ export interface ICurrency {
 export interface IAddress {
   id: string;
   nameChs: string;
-  nameEng: string;
+  name: string;
 }
 
 export interface ICompany {
@@ -31,12 +31,10 @@ export interface ISubmitSalary {
   positionName?: string;
 }
 
-export interface IRecord extends Omit<ICompany, 'description'> {
+export interface IRecord extends Omit<ICompany, "description"> {
   basicSalary: string;
   extraSalary: string;
-  positionId: string;
-  positionName: string;
-  currency: string;
-  companyAddress: string;
+  currencyName: string;
+  cityName: string;
   walletAddress: string;
 }

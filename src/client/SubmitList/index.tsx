@@ -15,6 +15,8 @@ import {
 import { getCompanyDetail, getRecordList } from "@/api";
 import { DPageContainer } from "@/components/DPageContainer";
 import { ICompany, IRecord } from "@/types";
+import { useSearchParams } from "next/navigation";
+import { ellipseAddress } from "@/utils";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,7 +39,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const SubmitList = () => {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const companyId = searchParams.get("companyId");
   const positionId = searchParams.get("positionId");
   const addressId = searchParams.get("addressId");
@@ -58,7 +60,7 @@ export const SubmitList = () => {
       positionId
     ).then((data) => {
       console.log("data====>", data);
-      setRecordList(data);
+      setRecordList(data.records || []);
     });
   }, [companyId, positionId, addressId, pagination]);
 
@@ -119,9 +121,11 @@ export const SubmitList = () => {
             <TableBody>
               {(recordList || []).map((record, recordIndex) => (
                 <StyledTableRow key={recordIndex}>
-                  <StyledTableCell>{record.walletAddress}</StyledTableCell>
-                  <StyledTableCell>{record.companyAddress}</StyledTableCell>
-                  <StyledTableCell>{record.currency}</StyledTableCell>
+                  <StyledTableCell>
+                    {ellipseAddress(record.walletAddress)}
+                  </StyledTableCell>
+                  <StyledTableCell>{record.cityName}</StyledTableCell>
+                  <StyledTableCell>{record.currencyName}</StyledTableCell>
                   <StyledTableCell align="right">
                     {record.basicSalary}
                   </StyledTableCell>

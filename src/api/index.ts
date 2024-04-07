@@ -9,7 +9,7 @@ const salaryAverageURL = apiPre + "/salary/average";
 const submitSalaryURL = apiPre + "/salary/add";
 const addressListURL = apiPre + "/city/list";
 const fiatListURL = apiPre + "/currency/list";
-const recordListURL = apiPre + "/salary/list";
+const recordListURL = apiPre + "/salary/record";
 const companyDetailURL = apiPre + "/company/detail";
 const companyListURL = apiPre + "/company/list";
 

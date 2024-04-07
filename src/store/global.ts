@@ -32,16 +32,19 @@ class PublicStore {
   };
   queryAddressList = async () => {
     try {
-      const { addresses } = await getAddressList();
+      const serRes = await getAddressList();
+      console.log("serRes===>", serRes);
 
       this.set({
-        addressList: addresses,
+        addressList: serRes?.addresses || [],
       });
     } catch (error) {}
   };
   queryCurrencyList = async () => {
     try {
       const { currencyList } = await getFiatList();
+      console.log("currencyList===", currencyList);
+
       this.set({
         currencyList,
       });

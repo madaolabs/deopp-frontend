@@ -14,7 +14,7 @@ export const useAddSalary = (refreshFunc: Function) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const { setVisible } = useWalletModal();
   const { publicKey, connected, connect, select } = useWallet();
-  console.log("connected===>", connected);
+  console.log("addressList===>", addressList);
 
   const formik = useFormik({
     initialValues: {
@@ -96,9 +96,9 @@ export const useAddSalary = (refreshFunc: Function) => {
               label="Address"
               {...getFieldProps("cityId")}
             >
-              {addressList.map((address) => (
+              {(addressList || []).map((address) => (
                 <MenuItem key={address.id} value={address.id}>
-                  {address.nameChs} ({address.nameEng})
+                  {address.nameChs} ({address.name})
                 </MenuItem>
               ))}
             </TextField>

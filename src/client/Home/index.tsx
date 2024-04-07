@@ -26,12 +26,12 @@ export const Home = () => {
   const [companyList, setCompanyList] = useState<IAvgSalary[]>([]);
   const [showMore, setShowMore] = useState(false);
   const { positionList } = usePublicStore();
+  console.log("positionList===>", positionList);
 
   const [activePositionId, setActivePositionId] = useState<string>(
     positionList?.[0]?.id
   );
 
-  console.log("positionList===>", positionList, activePositionId);
   const router = useRouter();
   const { UI: AddSalaryUI, openModal: openSalaryModal } = useAddSalary(() =>
     handleChangePosition(activePositionId)
@@ -71,7 +71,7 @@ export const Home = () => {
     companyId: string;
     positionId: string;
   }) => {
-    router.push(`/submit/list?companyId=${companyId}&positionId=${positionId}`);
+    router.push(`/submit?companyId=${companyId}&positionId=${positionId}`);
   };
 
   useEffect(() => {
