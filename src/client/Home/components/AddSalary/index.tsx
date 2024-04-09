@@ -1,20 +1,67 @@
 "use client";
 import { Button, MenuItem, Modal, TextField } from "@mui/material";
-import { useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import {
+  S3Client,
+  ListBucketsCommand,
+  PutObjectCommand,
+  S3ClientConfig,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useFormik, Form, FormikProvider } from "formik";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { DSnackbar } from "@/components/DSnackbar";
 import { usePublicStore } from "@/store/global";
-import { submitSalary } from "@/api";
+import { getS3Token, submitSalary } from "@/api";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+
+const bucketRegion = "ap-southeast-1";
+const albumBucketName = "deopp-contract";
 
 export const useAddSalary = (refreshFunc: Function) => {
   const { addressList, currencyList, companyList, positionList } =
     usePublicStore();
   const [showModal, setShowModal] = useState<boolean>(false);
   const { setVisible } = useWalletModal();
+  const [s3Token, setS3Token] = useState<{
+    accessKeyId: string;
+    sessionToken: string;
+    secretAccessKey: string;
+  } | null>(null);
   const { publicKey, connected, connect, select } = useWallet();
-  console.log("addressList===>", addressList);
+  const [contractName, setContractName] = useState("");
+
+  useEffect(() => {
+    queryS3Token();
+  }, []);
+
+  const s3Client = useMemo(() => {
+    if (s3Token) {
+      return new S3Client({
+        region: bucketRegion,
+        credentials: {
+          accessKeyId: s3Token.accessKeyId,
+          secretAccessKey: s3Token.secretAccessKey,
+          sessionToken: s3Token.sessionToken,
+        },
+      });
+    }
+  }, [s3Token]);
+
+  const queryS3Token = async () => {
+    getS3Token()
+      .then((token) => {
+        console.log("token====>", token);
+        setS3Token(token);
+      })
+      .catch((error) => {
+        console.error("error===>", error);
+      });
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -27,6 +74,7 @@ export const useAddSalary = (refreshFunc: Function) => {
       extraSalary: "",
       companyName: "",
       positionName: "",
+      contractUrl: "",
     },
     onSubmit: async (values) => {
       try {
@@ -50,6 +98,37 @@ export const useAddSalary = (refreshFunc: Function) => {
   const closeModal = () => {
     setShowModal(false);
     resetForm();
+  };
+
+  const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    const file = e.target.files[0];
+    const { name } = file;
+    setContractName(name);
+    const fileKey = `${publicKey?.toBase58()}-${name}`;
+
+    const input = {
+      Body: file,
+      Bucket: albumBucketName,
+      Key: fileKey,
+    };
+
+    const command = new PutObjectCommand(input);
+    await s3Client?.send(command);
+  };
+
+  const handleDelFile = async (name: string) => {
+    setContractName("");
+    const fileKey = `${publicKey?.toBase58()}-${name}`;
+
+    const input = {
+      Bucket: albumBucketName,
+      Key: fileKey,
+    };
+    const command = new DeleteObjectCommand(input);
+    await s3Client?.send(command);
   };
 
   const UI = useMemo(
@@ -147,6 +226,41 @@ export const useAddSalary = (refreshFunc: Function) => {
               type="number"
               {...getFieldProps("extraSalary")}
             ></TextField>
+
+            {contractName ? (
+              <div className="flex justify-between mt-4 text-secondary">
+                <span>{contractName}</span>
+                <span
+                  onClick={() => handleDelFile(contractName)}
+                  className="cursor-pointer"
+                >
+                  <HighlightOffIcon />
+                </span>
+              </div>
+            ) : (
+              s3Token && (
+                <div>
+                  <Button
+                    component="label"
+                    variant="outlined"
+                    startIcon={<UploadFileIcon />}
+                    className="!mt-4"
+                    sx={{ marginRight: "1rem" }}
+                  >
+                    Upload Contract
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      hidden
+                      onChange={handleFileUpload}
+                    />
+                  </Button>
+                  <div className="text-xs italic mt-3 text-red-600">
+                    * Get rewards after uploaded contract
+                  </div>
+                </div>
+              )
+            )}
             <div className="flex justify-end">
               <Button
                 variant="outlined"

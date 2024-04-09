@@ -26,7 +26,6 @@ export const Home = () => {
   const [companyList, setCompanyList] = useState<IAvgSalary[]>([]);
   const [showMore, setShowMore] = useState(false);
   const { positionList } = usePublicStore();
-  console.log("positionList===>", positionList);
 
   const [activePositionId, setActivePositionId] = useState<string>(
     positionList?.[0]?.id

@@ -12,6 +12,7 @@ const fiatListURL = apiPre + "/currency/list";
 const recordListURL = apiPre + "/salary/record";
 const companyDetailURL = apiPre + "/company/detail";
 const companyListURL = apiPre + "/company/list";
+const s3TokenURL = apiPre + "/s3token";
 
 export const getPositionList = async (params: {
   page: number;
@@ -72,5 +73,10 @@ export const submitSalary = async (body: ISubmitSalary) => {
 
 export const getCompanyList = async () => {
   const { data } = await requestIns.get(companyListURL);
+  return analyzeRes(data);
+};
+
+export const getS3Token = async () => {
+  const { data } = await requestIns.get(s3TokenURL);
   return analyzeRes(data);
 };
