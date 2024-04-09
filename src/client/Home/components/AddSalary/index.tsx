@@ -3,14 +3,11 @@ import { Button, MenuItem, Modal, TextField } from "@mui/material";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import {
   S3Client,
-  ListBucketsCommand,
   PutObjectCommand,
-  S3ClientConfig,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
-import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useFormik, Form, FormikProvider } from "formik";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
