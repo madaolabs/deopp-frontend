@@ -43,7 +43,7 @@ export const DProvider = ({ children }: React.PropsWithChildren) => {
 
   useEffect(() => {
     init();
-  }, []);
+  }, [init]);
 
   return (
     <ThemeProvider theme={customeTheme}>
