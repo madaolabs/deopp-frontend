@@ -21,6 +21,8 @@ import { IAvgSalary, ICompanyInfo, IPositionType } from "./types";
 import { useAddSalary } from "./components/AddSalary";
 import { usePublicStore } from "@/store/global";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import OverFlowXMore from "@/components/OverFlowXMore";
 
 export const Home = () => {
   const [companyList, setCompanyList] = useState<IAvgSalary[]>([]);
@@ -98,54 +100,35 @@ export const Home = () => {
               Add immediately
             </div>
           </div>
-          <img
+          <Image
             src="/assets/home_banner.png"
-            className="w-64 object-contain"
-          ></img>
+            width={0}
+            height={0}
+            className="object-cover lg:w-48 xl:w-64"
+            unoptimized
+            alt={""}
+          ></Image>
         </Card>
-        <div className="mb-4 flex">
-          {positionList.slice(0, 5).map((position) => (
-            <Button
-              key={position.id}
-              size="small"
-              variant="contained"
-              color="neutral"
-              className={`!mr-4 !font-normal !leading-6 ${
-                position.id === activePositionId &&
-                "!bg-[var(--primary-color)] !text-white"
-              }`}
-              onClick={() => handleChangePosition(position.id)}
-            >
-              {position.nameChs}
-            </Button>
-          ))}
-          <ClickAwayListener onClickAway={() => handleClickMore(false)}>
-            <Tooltip
-              arrow
-              PopperProps={{
-                disablePortal: true,
-              }}
-              classes={{ tooltip: "w-72 !bg-white", arrow: "!text-white" }}
-              title={<PositionList></PositionList>}
-              onClose={() => handleClickMore(false)}
-              disableFocusListener
-              disableHoverListener
-              disableTouchListener
-              open={showMore}
-            >
+        <div className="mb-4">
+          <OverFlowXMore>
+            {positionList.map((position) => (
               <Button
+                key={position.id}
                 size="small"
                 variant="contained"
                 color="neutral"
-                className="!font-normal"
-                onClick={() => handleClickMore(true)}
+                className={`!mr-4 !font-normal !leading-6 ${
+                  position.id === activePositionId &&
+                  "!bg-[var(--primary-color)] !text-white"
+                }`}
+                onClick={() => handleChangePosition(position.id)}
               >
-                More
+                {position.nameChs}
               </Button>
-            </Tooltip>
-          </ClickAwayListener>
+            ))}
+          </OverFlowXMore>
         </div>
-        <Card className="grid grid-cols-4 gap-4 p-8">
+        <Card className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 p-8">
           {(companyList || []).map((company) => (
             <div
               key={`${company.currency}-${company.companyId}`}
@@ -157,7 +140,14 @@ export const Home = () => {
                 })
               }
             >
-              <img src={company.companyLogo} className="h-10 w-10" />
+              <Image
+                src={company.companyLogo}
+                width={0}
+                height={0}
+                className="h-10 w-10 object-cover"
+                unoptimized
+                alt={""}
+              />
               <div>
                 <div className="text-xs font-semibold">
                   {company.companyName}

@@ -18,6 +18,7 @@ export function middleware(req: NextRequest) {
 
   // Redirect if lng in path is not supported
   if (
+    req.nextUrl.pathname !== "/" &&
     !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
     !req.nextUrl.pathname.startsWith("/_next")
   ) {

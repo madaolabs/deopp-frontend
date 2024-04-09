@@ -1,0 +1,49 @@
+.Xmore {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+
+    &-overflowX {
+        display: inline-flex;
+        overflow-x: auto;
+        touch-action: pan-x;
+        width: 100%;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        >div {
+            display: inline-flex;
+            flex-shrink: 0;
+
+            >* {
+                flex-shrink: 0;
+            }
+        }
+    }
+
+    &-after {
+        &::after {
+            content: "";
+            position: absolute;
+            width: 24px;
+            height: 100%;
+            top: 0;
+            right: 0;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, .1) 100%);
+        }
+    }
+
+    &-before {
+        &::before {
+            content: "";
+            position: absolute;
+            width: 24px;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: linear-gradient(to left, transparent, rgba(0, 0, 0, .1) 100%);
+        }
+    }
+}

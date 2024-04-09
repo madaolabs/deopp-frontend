@@ -17,6 +17,7 @@ import { DPageContainer } from "@/components/DPageContainer";
 import { ICompany, IRecord } from "@/types";
 import { useSearchParams } from "next/navigation";
 import { ellipseAddress } from "@/utils";
+import Image from "next/image";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -91,13 +92,16 @@ export const SubmitList = () => {
 
   return (
     <DPageContainer>
-      <Card className="p-10">
+      <Card className="sm:p-10 p-6">
         <div className="m-auto flex w-10/12">
-          <img
-            src={companyInfo?.logo}
-            width={50}
-            className="mr-8 object-contain"
-          ></img>
+          <Image
+            src={companyInfo?.logo || ""}
+            width={0}
+            height={0}
+            className="mr-8 w-12 object-contain"
+            unoptimized
+            alt={""}
+          ></Image>
           <div>
             <div className="mb-2 text-2xl">{companyInfo?.name}</div>
             <div className="text-sm text-[var(--primary-text-color)]">
@@ -106,12 +110,14 @@ export const SubmitList = () => {
           </div>
         </div>
       </Card>
-      <div className="m-auto my-6 w-10/12 lg:w-11/12">
-        <Card className="p-5">
-          <Table>
+      <div className="m-auto my-6 w-11/12 lg:w-10/12">
+        <Card className="p-2">
+          <Table className="whitespace-nowrap">
             <TableHead>
               <TableRow>
-                <StyledTableCell>Wallet Address</StyledTableCell>
+                <StyledTableCell className="!hidden sm:!table-cell">
+                  Wallet Address
+                </StyledTableCell>
                 <StyledTableCell>City</StyledTableCell>
                 <StyledTableCell>Currency</StyledTableCell>
                 <StyledTableCell align="right">Basic Salary</StyledTableCell>
@@ -121,8 +127,8 @@ export const SubmitList = () => {
             <TableBody>
               {(recordList || []).map((record, recordIndex) => (
                 <StyledTableRow key={recordIndex}>
-                  <StyledTableCell>
-                    {ellipseAddress(record.walletAddress)}
+                  <StyledTableCell className="!hidden sm:!table-cell">
+                    {ellipseAddress(record.walletAddress, 10, 5)}
                   </StyledTableCell>
                   <StyledTableCell>{record.cityName}</StyledTableCell>
                   <StyledTableCell>{record.currencyName}</StyledTableCell>

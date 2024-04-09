@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { ellipseAddress } from "@/utils";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 const WalletDisconnectButtonDynamic = dynamic(
   async () =>
@@ -26,7 +27,14 @@ export const DHeader = () => {
           router.push("/");
         }}
       >
-        <img src="/assets/logo.svg" className="mr-2"></img>Deopp
+        <Image
+          src="/assets/logo.svg"
+          width={0}
+          height={0}
+          className="mr-2 w-10"
+          alt={""}
+        ></Image>
+        Deopp
       </div>
       <div className="relative">
         {connected && publicKey ? (
