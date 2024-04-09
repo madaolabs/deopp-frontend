@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://deopp.dewall.xyz
+
+# Sitemaps
+Sitemap: https://deopp.dewall.xyz/sitemap.xml
