@@ -1,27 +1,22 @@
-"use client";
-import { Button } from "@mui/material";
-import { useRef } from "react";
 import { useRouter } from "next/navigation";
-import {
-  WalletModalProvider,
-  WalletDisconnectButton,
-  WalletMultiButton,
-  useWalletModal,
-} from "@solana/wallet-adapter-react-ui";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { ellipseAddress } from "@/utils";
+import dynamic from "next/dynamic";
+
+const WalletDisconnectButtonDynamic = dynamic(
+  async () =>
+    (await import("@solana/wallet-adapter-react-ui")).WalletDisconnectButton,
+  { ssr: false }
+);
+const WalletMultiButtonDynamic = dynamic(
+  async () =>
+    (await import("@solana/wallet-adapter-react-ui")).WalletMultiButton,
+  { ssr: false }
+);
 
 export const DHeader = () => {
-  const web3BtnRef = useRef<any>(null);
-  const { connection } = useConnection();
   const { publicKey, connected, connect } = useWallet();
   const router = useRouter();
-
-  const handleConnect = async () => {
-    await connect();
-  };
-
-  const handleDisconnect = async () => {};
 
   return (
     <div className="flex w-full justify-between bg-white px-6 py-3 sm:px-10 md:px-20">
@@ -35,13 +30,13 @@ export const DHeader = () => {
       </div>
       <div className="relative">
         {connected && publicKey ? (
-          <WalletDisconnectButton style={{ background: "#05A17E" }}>
+          <WalletDisconnectButtonDynamic style={{ background: "#05A17E" }}>
             {ellipseAddress(publicKey.toBase58(), 8, 4)}
-          </WalletDisconnectButton>
+          </WalletDisconnectButtonDynamic>
         ) : (
-          <WalletMultiButton style={{ background: "#05A17E" }}>
+          <WalletMultiButtonDynamic style={{ background: "#05A17E" }}>
             Connect
-          </WalletMultiButton>
+          </WalletMultiButtonDynamic>
         )}
       </div>
     </div>
