@@ -160,7 +160,6 @@ export const useAddSalary = (refreshFunc: Function) => {
               label="Company"
               {...getFieldProps("companyId")}
               error={!!errors.companyId}
-              helperText={errors.companyId}
             >
               {companyList.map((company) => (
                 <MenuItem key={company.id} value={company.id}>
@@ -176,7 +175,6 @@ export const useAddSalary = (refreshFunc: Function) => {
               label="Position"
               {...getFieldProps("positionId")}
               error={!!errors.positionId}
-              helperText={errors.positionId}
             >
               {positionList.map((position) => (
                 <MenuItem key={position.id} value={position.id}>
@@ -192,7 +190,6 @@ export const useAddSalary = (refreshFunc: Function) => {
               label="Address"
               {...getFieldProps("cityId")}
               error={!!errors.cityId}
-              helperText={errors.cityId}
             >
               {(addressList || []).map((address) => (
                 <MenuItem key={address.id} value={address.id}>
@@ -214,7 +211,6 @@ export const useAddSalary = (refreshFunc: Function) => {
                 min: 0,
               }}
               error={!!errors.workYear}
-              helperText={errors.workYear}
             >
               {/* {new Array(40).fill(undefined).map((_, index) => (
                 <MenuItem key={index + 1} value={index + 1}>
@@ -230,7 +226,6 @@ export const useAddSalary = (refreshFunc: Function) => {
               label="Currency"
               {...getFieldProps("currencyId")}
               error={!!errors.currencyId}
-              helperText={errors.currencyId}
             >
               {(currencyList || []).map((currency) => (
                 <MenuItem key={currency.id} value={currency.id}>
@@ -246,7 +241,6 @@ export const useAddSalary = (refreshFunc: Function) => {
               type="number"
               {...getFieldProps("basicSalary")}
               error={!!errors.basicSalary}
-              helperText={errors.basicSalary}
             ></TextField>
             <TextField
               fullWidth
@@ -255,7 +249,6 @@ export const useAddSalary = (refreshFunc: Function) => {
               type="number"
               {...getFieldProps("extraSalary")}
               error={!!errors.extraSalary}
-              helperText={errors.extraSalary}
             ></TextField>
 
             {contractName ? (
@@ -286,7 +279,7 @@ export const useAddSalary = (refreshFunc: Function) => {
                       onChange={handleFileUpload}
                     />
                   </Button>
-                  <div className="text-xs italic mt-3 text-red-600">
+                  <div className="text-xs italic mt-3 text-secondary">
                     * Get rewards after uploaded contract
                   </div>
                 </div>
