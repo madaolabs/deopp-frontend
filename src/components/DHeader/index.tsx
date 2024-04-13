@@ -34,7 +34,7 @@ export const DHeader = () => {
           className="mr-2 w-10"
           alt={""}
         ></Image>
-        Deopp
+        <span className="font-bold text-xl">Dopp</span>
       </div>
       <div className="relative">
         {connected && publicKey ? (

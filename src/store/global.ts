@@ -11,13 +11,12 @@ import { persist } from "zustand/middleware";
 
 class PublicStore {
   constructor(readonly set: any, readonly get: any) {}
-  jobList = [];
   companyList: ICompany[] = [];
   addressList: IAddress[] = [];
   currencyList: ICurrency[] = [];
   positionList: IPositionType[] = [];
   init = async () => {
-    this.queryPositionList({ page: 1, pageSize: 10 });
+    this.queryPositionList({ page: 1, pageSize: 70 });
     this.queryAddressList();
     this.queryCurrencyList();
     this.queryCompanyList();
@@ -33,7 +32,6 @@ class PublicStore {
   queryAddressList = async () => {
     try {
       const serRes = await getAddressList();
-      console.log("serRes===>", serRes);
 
       this.set({
         addressList: serRes?.addresses || [],
@@ -43,7 +41,6 @@ class PublicStore {
   queryCurrencyList = async () => {
     try {
       const { currencyList } = await getFiatList();
-      console.log("currencyList===", currencyList);
 
       this.set({
         currencyList,

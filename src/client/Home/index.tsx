@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DPageContainer } from "@/components/DPageContainer";
 import {
   Card,
@@ -24,13 +24,23 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import OverFlowXMore from "@/components/OverFlowXMore";
 
-export const Home = () => {
-  const [companyList, setCompanyList] = useState<IAvgSalary[]>([]);
-  const [showMore, setShowMore] = useState(false);
-  const { positionList } = usePublicStore();
+interface IHomeProps {
+  defaultData: {
+    positionList: IPositionType[];
+    avgSalaryList: IAvgSalary[];
+  };
+}
+
+export const Home = ({ defaultData }: IHomeProps) => {
+  const [companyList, setCompanyList] = useState<IAvgSalary[]>(
+    defaultData.avgSalaryList || []
+  );
+  const { positionList: clientPositionList } = usePublicStore();
+  const { positionList: defaultPositionList } = defaultData;
+  const positionList = defaultPositionList || clientPositionList;
 
   const [activePositionId, setActivePositionId] = useState<string>(
-    positionList?.[0]?.id
+    defaultPositionList?.[0]?.id || positionList?.[0]?.id
   );
 
   const router = useRouter();
@@ -44,10 +54,6 @@ export const Home = () => {
       setCompanyList(serviceData?.companies || []);
       setActivePositionId(positionId);
     } catch (error) {}
-  };
-
-  const handleClickMore = (val: boolean) => {
-    setShowMore(val);
   };
 
   const PositionList = () => (

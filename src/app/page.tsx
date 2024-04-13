@@ -3,6 +3,9 @@ import { Home } from "@/client/Home";
 import { fallbackLng, languages } from "@/i18n/settings";
 import acceptLanguage from "accept-language";
 import { Metadata } from "next";
+import { usePublicStore } from "@/store/global";
+import { getSalaryAverage } from "@/api";
+import { IPositionType } from "@/client/Home/types";
 
 acceptLanguage.languages(languages);
 
@@ -27,6 +30,28 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootUrl({ params }: { params: { lng: string } }) {
+  let defaultPositionList: IPositionType[] = [];
+  let defaultAvgSalaryList = [];
+  try {
+    const { queryPositionList } = usePublicStore.getState();
+    await queryPositionList({ page: 1, pageSize: 70 });
+    const { positionList } = usePublicStore.getState();
+    defaultPositionList = positionList || [];
+    if (positionList && positionList.length) {
+      const serAvgSalary = await getSalaryAverage(positionList[0]?.id);
+      defaultAvgSalaryList = serAvgSalary?.companies || [];
+    }
+  } catch (error) {
+    console.log("server request error", error);
+  }
+
   // const Node = await Token({ params });
-  return <Home />;
+  return (
+    <Home
+      defaultData={{
+        positionList: defaultPositionList,
+        avgSalaryList: defaultAvgSalaryList,
+      }}
+    />
+  );
 }

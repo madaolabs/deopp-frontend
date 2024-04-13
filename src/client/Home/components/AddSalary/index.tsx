@@ -204,7 +204,7 @@ export const useAddSalary = (refreshFunc: Function) => {
               label="Currency"
               {...getFieldProps("currencyId")}
             >
-              {currencyList.map((currency) => (
+              {(currencyList || []).map((currency) => (
                 <MenuItem key={currency.id} value={currency.id}>
                   {currency.label} ({currency.symbol})
                 </MenuItem>
