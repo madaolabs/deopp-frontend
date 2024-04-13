@@ -7,7 +7,6 @@ import {
 } from "@/api";
 import { IAddress, ICompany, ICurrency } from "@/types";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 class PublicStore {
   constructor(readonly set: any, readonly get: any) {}
@@ -57,4 +56,6 @@ class PublicStore {
   };
 }
 
-export const usePublicStore = create((set, get) => new PublicStore(set, get));
+export const usePublicStore = create<PublicStore>(
+  (set, get) => new PublicStore(set, get)
+);

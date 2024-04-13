@@ -6,6 +6,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
+import * as Yup from "yup";
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useFormik, Form, FormikProvider } from "formik";
@@ -66,21 +67,34 @@ export const useAddSalary = (refreshFunc: Function) => {
       cityId: "",
       workYear: "",
       currencyId: "",
-      basicSalary: "",
-      extraSalary: "",
+      basicSalary: "0",
+      extraSalary: "0",
       companyName: "",
       positionName: "",
-      contractUrl: "",
     },
-    onSubmit: async (values) => {
+    validationSchema: Yup.object({
+      companyId: Yup.string().required(),
+      positionId: Yup.string().required(),
+      cityId: Yup.string().required(),
+      currencyId: Yup.string().required(),
+      workYear: Yup.number().required(),
+      basicSalary: Yup.string().required(),
+      extraSalary: Yup.string().required(),
+    }),
+    onSubmit: async (values, formikHelpers) => {
+      console.log("values===>", values);
+      console.log("formikHelpers===>", formikHelpers);
+
       try {
         const address = publicKey?.toBase58();
         if (!address) return;
         await submitSalary({ ...values, walletAddress: address });
-        DSnackbar.success(
-          `Submit Successfully. We will send token to: ${address}`,
-          5000
-        );
+        if (contractName) {
+          DSnackbar.success(
+            `Submit Successfully. We will send token to: ${address}`,
+            5000
+          );
+        }
         refreshFunc && refreshFunc();
         closeModal();
       } catch (error) {
@@ -89,7 +103,7 @@ export const useAddSalary = (refreshFunc: Function) => {
     },
   });
 
-  const { getFieldProps, handleSubmit, resetForm } = formik;
+  const { getFieldProps, handleSubmit, resetForm, errors } = formik;
 
   const closeModal = () => {
     setShowModal(false);
@@ -139,11 +153,14 @@ export const useAddSalary = (refreshFunc: Function) => {
               Submit My Salary
             </div>
             <TextField
+              required
               fullWidth
               select
               className="!mb-4"
               label="Company"
               {...getFieldProps("companyId")}
+              error={!!errors.companyId}
+              helperText={errors.companyId}
             >
               {companyList.map((company) => (
                 <MenuItem key={company.id} value={company.id}>
@@ -152,11 +169,14 @@ export const useAddSalary = (refreshFunc: Function) => {
               ))}
             </TextField>
             <TextField
+              required
               fullWidth
               select
               className="!mb-4"
               label="Position"
               {...getFieldProps("positionId")}
+              error={!!errors.positionId}
+              helperText={errors.positionId}
             >
               {positionList.map((position) => (
                 <MenuItem key={position.id} value={position.id}>
@@ -165,11 +185,14 @@ export const useAddSalary = (refreshFunc: Function) => {
               ))}
             </TextField>
             <TextField
+              required
               fullWidth
               select
               className="!mb-4"
               label="Address"
               {...getFieldProps("cityId")}
+              error={!!errors.cityId}
+              helperText={errors.cityId}
             >
               {(addressList || []).map((address) => (
                 <MenuItem key={address.id} value={address.id}>
@@ -178,6 +201,7 @@ export const useAddSalary = (refreshFunc: Function) => {
               ))}
             </TextField>
             <TextField
+              required
               fullWidth
               className="!mb-4"
               label="WorkYear"
@@ -189,6 +213,8 @@ export const useAddSalary = (refreshFunc: Function) => {
                 max: 80,
                 min: 0,
               }}
+              error={!!errors.workYear}
+              helperText={errors.workYear}
             >
               {/* {new Array(40).fill(undefined).map((_, index) => (
                 <MenuItem key={index + 1} value={index + 1}>
@@ -197,11 +223,14 @@ export const useAddSalary = (refreshFunc: Function) => {
               ))} */}
             </TextField>
             <TextField
+              required
               fullWidth
               select
               className="!mb-4"
               label="Currency"
               {...getFieldProps("currencyId")}
+              error={!!errors.currencyId}
+              helperText={errors.currencyId}
             >
               {(currencyList || []).map((currency) => (
                 <MenuItem key={currency.id} value={currency.id}>
@@ -210,17 +239,23 @@ export const useAddSalary = (refreshFunc: Function) => {
               ))}
             </TextField>
             <TextField
+              required
               fullWidth
               className="!mb-4"
               label="Basic Salary / Year"
               type="number"
               {...getFieldProps("basicSalary")}
+              error={!!errors.basicSalary}
+              helperText={errors.basicSalary}
             ></TextField>
             <TextField
               fullWidth
+              required
               label="Extra Salary / Year"
               type="number"
               {...getFieldProps("extraSalary")}
+              error={!!errors.extraSalary}
+              helperText={errors.extraSalary}
             ></TextField>
 
             {contractName ? (
