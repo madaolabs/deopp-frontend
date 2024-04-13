@@ -52,7 +52,6 @@ export const useAddSalary = (refreshFunc: Function) => {
   const queryS3Token = async () => {
     getS3Token()
       .then((token) => {
-        console.log("token====>", token);
         setS3Token(token);
       })
       .catch((error) => {
