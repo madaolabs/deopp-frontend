@@ -57,8 +57,4 @@ class PublicStore {
   };
 }
 
-export const usePublicStore = create(
-  persist<PublicStore>((set, get) => new PublicStore(set, get), {
-    name: "public",
-  })
-);
+export const usePublicStore = create((set, get) => new PublicStore(set, get));
