@@ -14,21 +14,29 @@ const companyDetailURL = apiPre + "/company/detail";
 const companyListURL = apiPre + "/company/list";
 const s3TokenURL = apiPre + "/s3token";
 
+const NEXT_PUBLIC_MAIN_DOMAIN = process.env.NEXT_PUBLIC_MAIN_DOMAIN;
+
 export const getPositionList = async (params: {
   page: number;
   pageSize: number;
 }) => {
-  const { data } = await requestIns.get(positionURL, { params });
+  const data = await fetch(
+    `${NEXT_PUBLIC_MAIN_DOMAIN}${positionURL}?page=${params.page}&pageSize=${params.pageSize}`
+  ).then((res) => res.json());
   return analyzeRes(data);
 };
 
 export const getAddressList = async () => {
-  const { data } = await requestIns.get(addressListURL);
+  const data = await fetch(`${NEXT_PUBLIC_MAIN_DOMAIN}${addressListURL}`).then(
+    (res) => res.json()
+  );
   return analyzeRes(data);
 };
 
 export const getFiatList = async () => {
-  const { data } = await requestIns.get(fiatListURL);
+  const data = await fetch(`${NEXT_PUBLIC_MAIN_DOMAIN}${fiatListURL}`).then(
+    (res) => res.json()
+  );
   return analyzeRes(data);
 };
 
@@ -38,32 +46,23 @@ export const getRecordList = async (
   companyId: string,
   positionId: string
 ) => {
-  const { data } = await requestIns.get(recordListURL, {
-    params: {
-      page,
-      pageSize,
-      companyId,
-      positionId,
-    },
-  });
+  const data = await fetch(
+    `${NEXT_PUBLIC_MAIN_DOMAIN}${recordListURL}?page=${page}&pageSize=${pageSize}&companyId=${companyId}&positionId=${positionId}`
+  ).then((res) => res.json());
   return analyzeRes(data);
 };
 
 export const getCompanyDetail = async (companyId: string) => {
-  const { data } = await requestIns.get(companyDetailURL, {
-    params: {
-      companyId,
-    },
-  });
+  const data = await fetch(
+    `${NEXT_PUBLIC_MAIN_DOMAIN}${companyDetailURL}?companyId=${companyId}`
+  ).then((res) => res.json());
   return analyzeRes(data);
 };
 
 export const getSalaryAverage = async (positionId: string) => {
-  const { data } = await requestIns.get(salaryAverageURL, {
-    params: {
-      positionId,
-    },
-  });
+  const data = await fetch(
+    `${NEXT_PUBLIC_MAIN_DOMAIN}${salaryAverageURL}?positionId=${positionId}`
+  ).then((res) => res.json());
   return analyzeRes(data);
 };
 
@@ -72,11 +71,15 @@ export const submitSalary = async (body: ISubmitSalary) => {
 };
 
 export const getCompanyList = async () => {
-  const { data } = await requestIns.get(companyListURL);
+  const data = await fetch(`${NEXT_PUBLIC_MAIN_DOMAIN}${companyListURL}`).then(
+    (res) => res.json()
+  );
   return analyzeRes(data);
 };
 
 export const getS3Token = async () => {
-  const { data } = await requestIns.get(s3TokenURL);
+  const data = await fetch(`${NEXT_PUBLIC_MAIN_DOMAIN}${s3TokenURL}`).then(
+    (res) => res.json()
+  );
   return analyzeRes(data);
 };

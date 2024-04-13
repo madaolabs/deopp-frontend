@@ -111,7 +111,7 @@ export const SubmitList = () => {
         </div>
       </Card>
       <div className="m-auto my-6 w-11/12 lg:w-10/12">
-        <Card className="p-2">
+        <Card className="p-2 overflow-auto">
           <Table className="whitespace-nowrap">
             <TableHead>
               <TableRow>
@@ -134,8 +134,7 @@ export const SubmitList = () => {
                     {record.currencyName} {record.basicSalary}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {record.currencyName}
-                    {record.extraSalary}
+                    {record.currencyName} {record.extraSalary}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
