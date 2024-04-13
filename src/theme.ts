@@ -1,20 +1,21 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 export const customeTheme = createTheme({
   palette: {
     primary: {
-      main: '#05A17E',
+      main: "#05A17E",
     },
     neutral: {
-      main: '#FFF',
-      contrastText: '#858585',
+      main: "#FFF",
+      contrastText: "#858585",
     },
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          boxShadow: 'none',
+          boxShadow: "none",
+          textTransform: "none",
         },
       },
     },

@@ -22,8 +22,8 @@ export interface ISubmitSalary {
   positionId: string;
   cityId: string;
   workYear: string;
-  basicSalary: string;
-  extraSalary: string;
+  basicSalary: number;
+  extraSalary: number;
   currencyId: string;
   walletAddress: string;
   // other

@@ -1,5 +1,11 @@
 "use client";
-import { Button, MenuItem, Modal, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  MenuItem,
+  Modal,
+  TextField,
+} from "@mui/material";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import {
   S3Client,
@@ -67,8 +73,8 @@ export const useAddSalary = (refreshFunc: Function) => {
       cityId: "",
       workYear: "",
       currencyId: "",
-      basicSalary: "0",
-      extraSalary: "0",
+      basicSalary: 0,
+      extraSalary: 0,
       companyName: "",
       positionName: "",
     },
@@ -78,8 +84,8 @@ export const useAddSalary = (refreshFunc: Function) => {
       cityId: Yup.string().required(),
       currencyId: Yup.string().required(),
       workYear: Yup.number().required(),
-      basicSalary: Yup.string().required(),
-      extraSalary: Yup.string().required(),
+      basicSalary: Yup.number().required(),
+      extraSalary: Yup.number().required(),
     }),
     onSubmit: async (values, formikHelpers) => {
       console.log("values===>", values);
@@ -103,7 +109,8 @@ export const useAddSalary = (refreshFunc: Function) => {
     },
   });
 
-  const { getFieldProps, handleSubmit, resetForm, errors } = formik;
+  const { getFieldProps, handleSubmit, setFieldValue, resetForm, errors } =
+    formik;
 
   const closeModal = () => {
     setShowModal(false);
@@ -152,51 +159,61 @@ export const useAddSalary = (refreshFunc: Function) => {
             <div className="pb-6 text-center font-semibold">
               Submit My Salary
             </div>
-            <TextField
-              required
-              fullWidth
-              select
-              className="!mb-4"
-              label="Company"
-              {...getFieldProps("companyId")}
-              error={!!errors.companyId}
-            >
-              {companyList.map((company) => (
-                <MenuItem key={company.id} value={company.id}>
-                  {company.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              required
-              fullWidth
-              select
-              className="!mb-4"
-              label="Position"
-              {...getFieldProps("positionId")}
-              error={!!errors.positionId}
-            >
-              {positionList.map((position) => (
-                <MenuItem key={position.id} value={position.id}>
-                  {position.nameChs}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              required
-              fullWidth
-              select
-              className="!mb-4"
-              label="Address"
-              {...getFieldProps("cityId")}
-              error={!!errors.cityId}
-            >
-              {(addressList || []).map((address) => (
-                <MenuItem key={address.id} value={address.id}>
-                  {address.name}
-                </MenuItem>
-              ))}
-            </TextField>
+            <Autocomplete
+              options={companyList}
+              getOptionLabel={(option) => option.name}
+              getOptionKey={(option) => option.id}
+              onChange={(event, newValue) => {
+                setFieldValue("companyId", newValue?.id);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  required
+                  fullWidth
+                  className="!mb-4"
+                  label="Company"
+                  error={!!errors.companyId}
+                />
+              )}
+            />
+            <Autocomplete
+              options={positionList}
+              getOptionLabel={(option) => option.nameEng}
+              getOptionKey={(option) => option.id}
+              onChange={(event, newValue) => {
+                setFieldValue("positionId", newValue?.id);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  required
+                  fullWidth
+                  className="!mb-4"
+                  label="Position"
+                  error={!!errors.positionId}
+                />
+              )}
+            />
+            <Autocomplete
+              options={addressList}
+              getOptionLabel={(option) => option.name}
+              getOptionKey={(option) => option.id}
+              onChange={(event, newValue) => {
+                setFieldValue("cityId", newValue?.id);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  required
+                  fullWidth
+                  className="!mb-4"
+                  label="Address"
+                  error={!!errors.cityId}
+                />
+              )}
+            />
+
             <TextField
               required
               fullWidth
@@ -218,21 +235,28 @@ export const useAddSalary = (refreshFunc: Function) => {
                 </MenuItem>
               ))} */}
             </TextField>
-            <TextField
-              required
-              fullWidth
-              select
-              className="!mb-4"
-              label="Currency"
-              {...getFieldProps("currencyId")}
-              error={!!errors.currencyId}
-            >
-              {(currencyList || []).map((currency) => (
-                <MenuItem key={currency.id} value={currency.id}>
-                  {currency.label} ({currency.symbol})
-                </MenuItem>
-              ))}
-            </TextField>
+
+            <Autocomplete
+              options={currencyList}
+              getOptionLabel={(currency) =>
+                `${currency.label} (${currency.symbol})`
+              }
+              getOptionKey={(option) => option.id}
+              onChange={(event, newValue) => {
+                setFieldValue("currencyId", newValue?.id);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  required
+                  fullWidth
+                  className="!mb-4"
+                  label="Currency"
+                  error={!!errors.currencyId}
+                />
+              )}
+            />
+
             <TextField
               required
               fullWidth

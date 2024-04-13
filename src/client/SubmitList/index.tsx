@@ -60,7 +60,6 @@ export const SubmitList = () => {
       companyId,
       positionId
     ).then((data) => {
-      console.log("data====>", data);
       setRecordList(data.records || []);
     });
   }, [companyId, positionId, addressId, pagination]);
@@ -96,10 +95,11 @@ export const SubmitList = () => {
         <div className="m-auto flex w-10/12">
           <Image
             src={companyInfo?.logo || ""}
-            width={0}
+            width={48}
             height={0}
-            className="mr-8 w-12 object-contain"
-            unoptimized
+            className="mr-8 object-contain"
+            quality={100}
+            // unoptimized
             alt={""}
           ></Image>
           <div>
@@ -145,7 +145,7 @@ export const SubmitList = () => {
             component="div"
             count={pagination.total}
             rowsPerPage={pagination.pageSize}
-            page={pagination.currentPage}
+            page={pagination.currentPage - 1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />

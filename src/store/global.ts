@@ -15,7 +15,7 @@ class PublicStore {
   currencyList: ICurrency[] = [];
   positionList: IPositionType[] = [];
   init = async () => {
-    this.queryPositionList({ page: 1, pageSize: 70 });
+    this.queryPositionList({ page: 1, pageSize: 100 });
     this.queryAddressList();
     this.queryCurrencyList();
     this.queryCompanyList();

@@ -78,7 +78,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
     companyId: string;
     positionId: string;
   }) => {
-    router.push(`/submit?companyId=${companyId}&positionId=${positionId}`);
+    router.push(`/en/submit?companyId=${companyId}&positionId=${positionId}`);
   };
 
   useEffect(() => {
@@ -129,7 +129,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
                 }`}
                 onClick={() => handleChangePosition(position.id)}
               >
-                {position.nameChs}
+                {position.nameEng}
               </Button>
             ))}
           </OverFlowXMore>
