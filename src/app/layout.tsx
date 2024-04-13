@@ -2,11 +2,7 @@ import type { Metadata } from "next";
 import "./global.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { DProvider } from "@/components/DProvider";
-
-export const metadata: Metadata = {
-  title: "",
-  description: "",
-};
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export default function RootLayout({
   children,
@@ -19,6 +15,7 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <DProvider>{children}</DProvider>
         </AppRouterCacheProvider>
+        <GoogleAnalytics gaId="G-W3WL439YW6" />
       </body>
     </html>
   );
