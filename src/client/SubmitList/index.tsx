@@ -119,7 +119,6 @@ export const SubmitList = () => {
                   Wallet Address
                 </StyledTableCell>
                 <StyledTableCell>City</StyledTableCell>
-                <StyledTableCell>Currency</StyledTableCell>
                 <StyledTableCell align="right">Basic Salary</StyledTableCell>
                 <StyledTableCell align="right">Extra Salary</StyledTableCell>
               </TableRow>
@@ -131,11 +130,11 @@ export const SubmitList = () => {
                     {ellipseAddress(record.walletAddress, 10, 5)}
                   </StyledTableCell>
                   <StyledTableCell>{record.cityName}</StyledTableCell>
-                  <StyledTableCell>{record.currencyName}</StyledTableCell>
                   <StyledTableCell align="right">
-                    {record.basicSalary}
+                    {record.currencyName} {record.basicSalary}
                   </StyledTableCell>
                   <StyledTableCell align="right">
+                    {record.currencyName}
                     {record.extraSalary}
                   </StyledTableCell>
                 </StyledTableRow>

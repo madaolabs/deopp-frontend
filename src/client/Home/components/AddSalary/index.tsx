@@ -173,7 +173,7 @@ export const useAddSalary = (refreshFunc: Function) => {
             >
               {(addressList || []).map((address) => (
                 <MenuItem key={address.id} value={address.id}>
-                  {address.nameChs} ({address.name})
+                  {address.name}
                 </MenuItem>
               ))}
             </TextField>
