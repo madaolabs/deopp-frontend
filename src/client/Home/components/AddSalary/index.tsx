@@ -88,9 +88,6 @@ export const useAddSalary = (refreshFunc: Function) => {
       extraSalary: Yup.number().required(),
     }),
     onSubmit: async (values, formikHelpers) => {
-      console.log("values===>", values);
-      console.log("formikHelpers===>", formikHelpers);
-
       try {
         const address = publicKey?.toBase58();
         if (!address) return;
@@ -100,6 +97,8 @@ export const useAddSalary = (refreshFunc: Function) => {
             `Submit Successfully. We will send token to: ${address}`,
             5000
           );
+        } else {
+          DSnackbar.success(`Submit Successfully.`, 5000);
         }
         refreshFunc && refreshFunc();
         closeModal();
