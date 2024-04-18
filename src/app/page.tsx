@@ -34,7 +34,7 @@ export default async function RootUrl({ params }: { params: { lng: string } }) {
   let defaultAvgSalaryList = [];
   try {
     const { queryPositionList } = usePublicStore.getState();
-    await queryPositionList({ page: 1, pageSize: 100 });
+    await queryPositionList({ page: 1, pageSize: 10 });
     const { positionList } = usePublicStore.getState();
     defaultPositionList = positionList || [];
     if (positionList && positionList.length) {
