@@ -163,7 +163,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
                 </div>
                 <div className="text-xs">
                   <span className="text-[#05A17E]">
-                    {company.currency} {company.avgSalary}
+                    {company.currency} {company.avgSalary.toFixed(2)}
                   </span>
                   <span> / Year</span>
                 </div>
