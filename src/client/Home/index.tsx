@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import numeral from "numeral";
 import { DPageContainer } from "@/components/DPageContainer";
 import {
   Card,
@@ -15,6 +16,7 @@ import {
   Modal,
   TextField,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import { getPositionList, getSalaryAverage } from "@/api";
 import { IAvgSalary, ICompanyInfo, IPositionType } from "./types";
@@ -42,6 +44,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
   const [activePositionId, setActivePositionId] = useState<string>(
     defaultPositionList?.[0]?.id || positionList?.[0]?.id
   );
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const { UI: AddSalaryUI, openModal: openSalaryModal } = useAddSalary(() =>
@@ -50,10 +53,14 @@ export const Home = ({ defaultData }: IHomeProps) => {
 
   const handleChangePosition = async (positionId: string) => {
     try {
+      setActivePositionId(positionId);
+      setLoading(true);
       const serviceData = await getSalaryAverage(positionId);
       setCompanyList(serviceData?.companies || []);
-      setActivePositionId(positionId);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const PositionList = () => (
@@ -134,43 +141,53 @@ export const Home = ({ defaultData }: IHomeProps) => {
             ))}
           </OverFlowXMore>
         </div>
-        <Card className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 p-8">
-          {(companyList || []).map((company) => (
-            <div
-              key={`${company.currency}-${company.companyId}`}
-              className="flex cursor-pointer gap-4 rounded-lg border border-gray-100 p-3 pb-2"
-              onClick={() =>
-                toRecords({
-                  companyId: company.companyId,
-                  positionId: company.positionId,
-                })
-              }
-            >
-              <Image
-                src={company.companyLogo}
-                width={0}
-                height={0}
-                className="h-10 w-10 object-cover"
-                unoptimized
-                alt={""}
-              />
-              <div>
-                <div className="text-xs font-semibold">
-                  {company.companyName}
-                </div>
-                <div className="mb-2 mt-1 text-xs text-[#767676]">
-                  {company.companyAddress}
-                </div>
-                <div className="text-xs">
-                  <span className="text-[#05A17E]">
-                    {company.currency} {company.avgSalary.toFixed(2)}
-                  </span>
-                  <span> / Year</span>
+        {loading && (
+          <Card className="flex flex-col items-center py-8">
+            <CircularProgress />
+            <span className="mt-4">loading...</span>
+          </Card>
+        )}
+
+        {!loading && (
+          <Card className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 p-8">
+            {(companyList || []).map((company) => (
+              <div
+                key={`${company.currency}-${company.companyId}`}
+                className="flex cursor-pointer gap-4 rounded-lg border border-gray-100 p-3 pb-2"
+                onClick={() =>
+                  toRecords({
+                    companyId: company.companyId,
+                    positionId: company.positionId,
+                  })
+                }
+              >
+                <Image
+                  src={company.companyLogo}
+                  width={0}
+                  height={0}
+                  className="h-10 w-10 object-cover"
+                  unoptimized
+                  alt={""}
+                />
+                <div>
+                  <div className="text-xs font-semibold">
+                    {company.companyName}
+                  </div>
+                  <div className="mb-2 mt-1 text-xs text-[#767676]">
+                    {company.companyAddress}
+                  </div>
+                  <div className="text-xs">
+                    <span className="text-[#05A17E]">
+                      {company.currency}{" "}
+                      {numeral(company.avgSalary).format("0,0")}
+                    </span>
+                    <span> / Year</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </Card>
+            ))}
+          </Card>
+        )}
       </div>
       {AddSalaryUI}
     </DPageContainer>

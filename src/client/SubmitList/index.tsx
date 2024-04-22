@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-
+import numeral from "numeral";
 import {
   Table,
   TableHead,
@@ -131,10 +131,12 @@ export const SubmitList = () => {
                   </StyledTableCell>
                   <StyledTableCell>{record.cityName}</StyledTableCell>
                   <StyledTableCell align="right">
-                    {record.currencyName} {record.basicSalary}
+                    {record.currencyName}{" "}
+                    {numeral(record.basicSalary).format("0,0")}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {record.currencyName} {record.extraSalary}
+                    {record.currencyName}{" "}
+                    {numeral(record.extraSalary).format("0,0")}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}

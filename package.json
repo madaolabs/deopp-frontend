@@ -38,6 +38,7 @@
     "i18next-resources-to-backend": "^1.2.0",
     "next": "14.0.4",
     "next-sitemap": "^4.2.3",
+    "numeral": "^2.0.6",
     "prettier": "^2.8.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^18.15.13",
+    "@types/numeral": "^2.0.5",
     "@types/react": "^18.0.38",
     "@types/react-dom": "^18.0.11",
     "autoprefixer": "^10.4.14",
