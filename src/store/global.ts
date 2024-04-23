@@ -15,7 +15,7 @@ class PublicStore {
   currencyList: ICurrency[] = [];
   positionList: IPositionType[] = [];
   init = async () => {
-    this.queryPositionList({ page: 1, pageSize: 100 });
+    this.queryPositionList({ page: 1, pageSize: 10 });
     this.queryAddressList();
     this.queryCurrencyList();
     this.queryCompanyList();
@@ -49,8 +49,9 @@ class PublicStore {
   queryPositionList = async (params: { page: number; pageSize: number }) => {
     try {
       const { list } = (await getPositionList(params)) ?? { list: [] };
+      const { positionList } = this.get();
       this.set({
-        positionList: list,
+        positionList: params.page === 1 ? list : [...positionList, ...list],
       });
     } catch (error) {}
   };

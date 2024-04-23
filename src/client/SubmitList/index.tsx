@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import numeral from "numeral";
 import {
   Table,
@@ -11,6 +11,7 @@ import {
   Card,
   styled,
   tableCellClasses,
+  Skeleton,
 } from "@mui/material";
 import { getCompanyDetail, getRecordList } from "@/api";
 import { DPageContainer } from "@/components/DPageContainer";
@@ -51,17 +52,23 @@ export const SubmitList = () => {
     pageSize: 10,
     total: 0,
   });
+  const loadingRef = useRef(false);
 
   useEffect(() => {
     if (!companyId || !positionId) return;
+    loadingRef.current = true;
     getRecordList(
       pagination.currentPage,
       pagination.pageSize,
       companyId,
       positionId
-    ).then((data) => {
-      setRecordList(data.records || []);
-    });
+    )
+      .then((data) => {
+        setRecordList(data.records || []);
+      })
+      .finally(() => {
+        loadingRef.current = false;
+      });
   }, [companyId, positionId, addressId, pagination]);
 
   useEffect(() => {
@@ -112,45 +119,60 @@ export const SubmitList = () => {
       </Card>
       <div className="m-auto my-6 w-11/12 lg:w-10/12">
         <Card className="p-2 overflow-auto">
-          <Table className="whitespace-nowrap">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell className="!hidden sm:!table-cell">
-                  Wallet Address
-                </StyledTableCell>
-                <StyledTableCell>City</StyledTableCell>
-                <StyledTableCell align="right">Basic Salary</StyledTableCell>
-                <StyledTableCell align="right">Extra Salary</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(recordList || []).map((record, recordIndex) => (
-                <StyledTableRow key={recordIndex}>
-                  <StyledTableCell className="!hidden sm:!table-cell">
-                    {ellipseAddress(record.walletAddress, 10, 5)}
-                  </StyledTableCell>
-                  <StyledTableCell>{record.cityName}</StyledTableCell>
-                  <StyledTableCell align="right">
-                    {record.currencyName}{" "}
-                    {numeral(record.basicSalary).format("0,0")}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {record.currencyName}{" "}
-                    {numeral(record.extraSalary).format("0,0")}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <TablePagination
-            rowsPerPageOptions={[10, 20]}
-            component="div"
-            count={pagination.total}
-            rowsPerPage={pagination.pageSize}
-            page={pagination.currentPage - 1}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          {loadingRef.current && (
+            <>
+              <Skeleton variant="rounded" height={40} className="mb-2" />
+              <Skeleton variant="rounded" height={40} className="mb-2" />
+              <Skeleton variant="rounded" height={40} />
+            </>
+          )}
+          {!loadingRef.current && (
+            <>
+              <Table className="whitespace-nowrap">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell className="!hidden sm:!table-cell">
+                      Wallet Address
+                    </StyledTableCell>
+                    <StyledTableCell>City</StyledTableCell>
+                    <StyledTableCell align="right">
+                      Basic Salary
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      Extra Salary
+                    </StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(recordList || []).map((record, recordIndex) => (
+                    <StyledTableRow key={recordIndex}>
+                      <StyledTableCell className="!hidden sm:!table-cell">
+                        {ellipseAddress(record.walletAddress, 10, 5)}
+                      </StyledTableCell>
+                      <StyledTableCell>{record.cityName}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        {record.currencyName}{" "}
+                        {numeral(record.basicSalary).format("0,0")}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {record.currencyName}{" "}
+                        {numeral(record.extraSalary).format("0,0")}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                rowsPerPageOptions={[10, 20]}
+                component="div"
+                count={pagination.total}
+                rowsPerPage={pagination.pageSize}
+                page={pagination.currentPage - 1}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </>
+          )}
         </Card>
       </div>
     </DPageContainer>
