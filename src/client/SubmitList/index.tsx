@@ -50,13 +50,13 @@ export const SubmitList = () => {
   const [pagination, setPagination] = useState({
     currentPage: 1,
     pageSize: 10,
-    total: 0,
   });
-  const loadingRef = useRef(false);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!companyId || !positionId) return;
-    loadingRef.current = true;
+    setLoading(true);
     getRecordList(
       pagination.currentPage,
       pagination.pageSize,
@@ -65,9 +65,10 @@ export const SubmitList = () => {
     )
       .then((data) => {
         setRecordList(data.records || []);
+        setTotal(data.total);
       })
       .finally(() => {
-        loadingRef.current = false;
+        setLoading(false);
       });
   }, [companyId, positionId, addressId, pagination]);
 
@@ -81,8 +82,9 @@ export const SubmitList = () => {
     }
   }, [companyId]);
 
-  const handleChangePage = useCallback((event: unknown, newPage: number) => {},
-  []);
+  const handleChangePage = useCallback((event: unknown, newPage: number) => {
+    setPagination({ ...pagination, currentPage: newPage + 1 });
+  }, []);
 
   const handleChangeRowsPerPage = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +92,6 @@ export const SubmitList = () => {
       setPagination({
         currentPage: 1,
         pageSize: updatedRowsPerPage,
-        total: 0,
       });
     },
     []
@@ -119,14 +120,14 @@ export const SubmitList = () => {
       </Card>
       <div className="m-auto my-6 w-11/12 lg:w-10/12">
         <Card className="p-2 overflow-auto">
-          {loadingRef.current && (
+          {loading && (
             <>
               <Skeleton variant="rounded" height={40} className="mb-2" />
               <Skeleton variant="rounded" height={40} className="mb-2" />
               <Skeleton variant="rounded" height={40} />
             </>
           )}
-          {!loadingRef.current && (
+          {!loading && (
             <>
               <Table className="whitespace-nowrap">
                 <TableHead>
@@ -165,7 +166,7 @@ export const SubmitList = () => {
               <TablePagination
                 rowsPerPageOptions={[10, 20]}
                 component="div"
-                count={pagination.total}
+                count={total}
                 rowsPerPage={pagination.pageSize}
                 page={pagination.currentPage - 1}
                 onPageChange={handleChangePage}

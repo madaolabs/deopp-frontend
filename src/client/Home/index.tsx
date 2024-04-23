@@ -41,6 +41,10 @@ export const Home = ({ defaultData }: IHomeProps) => {
   );
 
   const handleChangePosition = async (positionId: string) => {
+    setActivePositionId(positionId);
+  };
+
+  const querySalaryAverageData = async (positionId: string) => {
     try {
       setActivePositionId(positionId);
       setLoading(true);
@@ -88,7 +92,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
 
   useEffect(() => {
     if (activePositionId) {
-      handleChangePosition(activePositionId);
+      querySalaryAverageData(activePositionId);
     }
   }, [activePositionId]);
 
