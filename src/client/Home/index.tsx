@@ -75,8 +75,6 @@ export const Home = ({ defaultData }: IHomeProps) => {
       scrollLeft + clientWidth > scrollWidth * 0.9 &&
       !loadingPositionRef.current
     ) {
-      console.log("scrollLeft===>");
-
       loadingPositionRef.current = true;
       queryPositionParamsRef.current = {
         page: queryPositionParamsRef.current.page + 1,
