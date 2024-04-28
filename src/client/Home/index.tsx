@@ -96,9 +96,9 @@ export const Home = ({ defaultData }: IHomeProps) => {
     }
   }, [activePositionId]);
 
-  useEffect(() => {
-    setActivePositionId(positionList?.[0]?.id);
-  }, [positionList]);
+  // useEffect(() => {
+  //   setActivePositionId(positionList?.[0]?.id);
+  // }, [positionList]);
 
   return (
     <DPageContainer>
