@@ -7,13 +7,14 @@ import {
 } from "@/api";
 import { IAddress, ICompany, ICurrency } from "@/types";
 import { create } from "zustand";
+import { defaultPositions } from "./default";
 
 class PublicStore {
   constructor(readonly set: any, readonly get: any) {}
   companyList: ICompany[] = [];
   addressList: IAddress[] = [];
   currencyList: ICurrency[] = [];
-  positionList: IPositionType[] = [];
+  positionList: IPositionType[] = defaultPositions;
   positionListTotal: number = 0;
   init = async () => {
     this.queryPositionList({ page: 1, pageSize: 10 });
