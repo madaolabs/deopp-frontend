@@ -7,15 +7,17 @@ import {
 } from "@/api";
 import { IAddress, ICompany, ICurrency } from "@/types";
 import { create } from "zustand";
+import { defaultPositions } from "./default";
 
 class PublicStore {
   constructor(readonly set: any, readonly get: any) {}
   companyList: ICompany[] = [];
   addressList: IAddress[] = [];
   currencyList: ICurrency[] = [];
-  positionList: IPositionType[] = [];
+  positionList: IPositionType[] = defaultPositions;
+  positionListTotal: number = 0;
   init = async () => {
-    this.queryPositionList({ page: 1, pageSize: 100 });
+    this.queryPositionList({ page: 1, pageSize: 10 });
     this.queryAddressList();
     this.queryCurrencyList();
     this.queryCompanyList();
@@ -48,9 +50,17 @@ class PublicStore {
   };
   queryPositionList = async (params: { page: number; pageSize: number }) => {
     try {
-      const { list } = (await getPositionList(params)) ?? { list: [] };
+      const { positionList, positionListTotal } = this.get();
+      if (
+        positionList.length > positionListTotal ||
+        (positionList.length === positionListTotal && positionListTotal !== 0)
+      )
+        return;
+      const { list, total } = (await getPositionList(params)) ?? { list: [] };
+
       this.set({
-        positionList: list,
+        positionList: params.page === 1 ? list : [...positionList, ...list],
+        positionListTotal: total,
       });
     } catch (error) {}
   };

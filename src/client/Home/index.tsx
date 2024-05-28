@@ -1,25 +1,10 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import numeral from "numeral";
 import { DPageContainer } from "@/components/DPageContainer";
-import {
-  Card,
-  Button,
-  Tooltip,
-  Select,
-  MenuItem,
-  List,
-  ListItemButton,
-  ListItemText,
-  Divider,
-  ClickAwayListener,
-  Modal,
-  TextField,
-  Box,
-  CircularProgress,
-} from "@mui/material";
-import { getPositionList, getSalaryAverage } from "@/api";
-import { IAvgSalary, ICompanyInfo, IPositionType } from "./types";
+import { Card, Button, CircularProgress } from "@mui/material";
+import { getSalaryAverage } from "@/api";
+import { IAvgSalary, IPositionType } from "./types";
 import { useAddSalary } from "./components/AddSalary";
 import { usePublicStore } from "@/store/global";
 import { useRouter } from "next/navigation";
@@ -37,9 +22,13 @@ export const Home = ({ defaultData }: IHomeProps) => {
   const [companyList, setCompanyList] = useState<IAvgSalary[]>(
     defaultData.avgSalaryList || []
   );
-  const { positionList: clientPositionList } = usePublicStore();
+  const loadingPositionRef = useRef(false);
+  const queryPositionParamsRef = useRef({ page: 1, pageSize: 10 });
+  const { positionList: clientPositionList, queryPositionList } =
+    usePublicStore();
   const { positionList: defaultPositionList } = defaultData;
-  const positionList = defaultPositionList || clientPositionList;
+  const positionList =
+    clientPositionList.length > 0 ? clientPositionList : defaultPositionList;
 
   const [activePositionId, setActivePositionId] = useState<string>(
     defaultPositionList?.[0]?.id || positionList?.[0]?.id
@@ -52,6 +41,10 @@ export const Home = ({ defaultData }: IHomeProps) => {
   );
 
   const handleChangePosition = async (positionId: string) => {
+    setActivePositionId(positionId);
+  };
+
+  const querySalaryAverageData = async (positionId: string) => {
     try {
       setActivePositionId(positionId);
       setLoading(true);
@@ -63,21 +56,6 @@ export const Home = ({ defaultData }: IHomeProps) => {
     }
   };
 
-  const PositionList = () => (
-    <List classes={{ root: "text-gray-900 shadow-lg" }} disablePadding>
-      {positionList.map((position) => (
-        <ListItemButton
-          divider
-          key={position.id}
-          selected={position.id === activePositionId}
-          onClick={() => setActivePositionId(position.id)}
-        >
-          <ListItemText primary={position.nameChs} />
-        </ListItemButton>
-      ))}
-    </List>
-  );
-
   const toRecords = ({
     companyId,
     positionId,
@@ -88,15 +66,37 @@ export const Home = ({ defaultData }: IHomeProps) => {
     router.push(`/en/submit?companyId=${companyId}&positionId=${positionId}`);
   };
 
+  const handleScroll = async (e: any) => {
+    const scrollLeft = e.target.scrollLeft;
+    const clientWidth = e.target.clientWidth;
+    const scrollWidth = e.target.scrollWidth;
+
+    if (
+      scrollLeft + clientWidth > scrollWidth * 0.9 &&
+      !loadingPositionRef.current
+    ) {
+      loadingPositionRef.current = true;
+      queryPositionParamsRef.current = {
+        page: queryPositionParamsRef.current.page + 1,
+        pageSize: queryPositionParamsRef.current.pageSize,
+      };
+      try {
+        await queryPositionList(queryPositionParamsRef.current);
+      } finally {
+        loadingPositionRef.current = false;
+      }
+    }
+  };
+
   useEffect(() => {
     if (activePositionId) {
-      handleChangePosition(activePositionId);
+      querySalaryAverageData(activePositionId);
     }
   }, [activePositionId]);
 
-  useEffect(() => {
-    setActivePositionId(positionList?.[0]?.id);
-  }, [positionList]);
+  // useEffect(() => {
+  //   setActivePositionId(positionList?.[0]?.id);
+  // }, [positionList]);
 
   return (
     <DPageContainer>
@@ -123,7 +123,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
           ></Image>
         </Card>
         <div className="mb-4">
-          <OverFlowXMore>
+          <OverFlowXMore onScroll={handleScroll}>
             {positionList.map((position) => (
               <Button
                 key={position.id}
