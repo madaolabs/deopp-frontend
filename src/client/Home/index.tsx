@@ -114,7 +114,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
             </div>
           </div>
           <Image
-            src="/assets/home_banner.png"
+            src="/assets/home_banner.webp"
             width={0}
             height={0}
             className="object-cover lg:w-48 xl:w-64"
