@@ -30,9 +30,11 @@ export const Home = ({ defaultData }: IHomeProps) => {
   const positionList =
     clientPositionList.length > 0 ? clientPositionList : defaultPositionList;
 
-  const [activePositionId, setActivePositionId] = useState<string>(
-    defaultPositionList?.[0]?.id || positionList?.[0]?.id
+  const [activePositionId, setActivePositionId] = useState<number>(
+    positionList?.[0]?.id
   );
+  console.log("activePositionId", activePositionId, positionList);
+
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -40,11 +42,11 @@ export const Home = ({ defaultData }: IHomeProps) => {
     handleChangePosition(activePositionId)
   );
 
-  const handleChangePosition = async (positionId: string) => {
+  const handleChangePosition = async (positionId: number) => {
     setActivePositionId(positionId);
   };
 
-  const querySalaryAverageData = async (positionId: string) => {
+  const querySalaryAverageData = async (positionId: number) => {
     try {
       setActivePositionId(positionId);
       setLoading(true);

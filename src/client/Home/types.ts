@@ -1,5 +1,5 @@
 export interface IPositionType {
-  id: string;
+  id: number;
   nameChs: string;
   nameEng: string;
 }

@@ -59,7 +59,7 @@ export const getCompanyDetail = async (companyId: string) => {
   return analyzeRes(data);
 };
 
-export const getSalaryAverage = async (positionId: string) => {
+export const getSalaryAverage = async (positionId: number) => {
   const data = await fetch(
     `${NEXT_PUBLIC_MAIN_DOMAIN}${salaryAverageURL}?positionId=${positionId}`
   ).then((res) => res.json());
