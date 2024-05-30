@@ -20,7 +20,7 @@ export const DHeader = () => {
   const router = useRouter();
 
   return (
-    <div className="flex w-full justify-between bg-white px-6 py-3 sm:px-10 md:px-20">
+    <div className="flex w-full justify-between bg-white border-b px-6 py-3 sm:px-10 md:px-20">
       <div
         className="text-bold flex cursor-pointer items-center"
         onClick={() => {

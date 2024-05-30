@@ -101,7 +101,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
   return (
     <DPageContainer>
       <div className="m-auto my-6 w-11/12 md:w-10/12">
-        <Card className="mb-6 flex w-full justify-between rounded-lg bg-[var(--primary-block-bg)] py-6 pl-5 pr-24">
+        <Card className="mb-6 flex w-full justify-between rounded-lg py-6 pl-5 pr-24">
           <div>
             <div className="mb-4 text-2xl font-semibold text-black">
               Add Salary Rewards
@@ -128,9 +128,9 @@ export const Home = ({ defaultData }: IHomeProps) => {
               <Button
                 key={position.id}
                 size="small"
-                variant="contained"
-                color="neutral"
-                className={`!mr-4 !font-normal !leading-6 ${
+                variant="outlined"
+                // color="neutral"
+                className={`!mr-4 !font-normal !leading-8 ${
                   position.id === activePositionId &&
                   "!bg-[var(--primary-color)] !text-white"
                 }`}
@@ -153,7 +153,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
             {(companyList || []).map((company) => (
               <div
                 key={`${company.currency}-${company.companyId}`}
-                className="flex cursor-pointer gap-4 rounded-lg border border-gray-100 p-3 pb-2"
+                className="flex cursor-pointer gap-4 rounded-lg border-4 border-[rgba(42,121,155,.05)] px-3 py-4"
                 onClick={() =>
                   toRecords({
                     companyId: company.companyId,
