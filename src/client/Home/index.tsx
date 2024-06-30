@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import numeral from "numeral";
 import { DPageContainer } from "@/components/DPageContainer";
-import { Card, Button, CircularProgress } from "@mui/material";
+import { Card, Button, Skeleton } from "@mui/material";
 import { getSalaryAverage } from "@/api";
 import { IAvgSalary, IPositionType } from "./types";
 import { useAddSalary } from "./components/AddSalary";
@@ -33,9 +33,8 @@ export const Home = ({ defaultData }: IHomeProps) => {
   const [activePositionId, setActivePositionId] = useState<number>(
     positionList?.[0]?.id
   );
-  console.log("activePositionId", activePositionId, positionList);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const { UI: AddSalaryUI, openModal: openSalaryModal } = useAddSalary(() =>
@@ -103,23 +102,24 @@ export const Home = ({ defaultData }: IHomeProps) => {
   return (
     <DPageContainer>
       <div className="m-auto my-6 w-11/12 md:w-10/12">
-        <Card className="mb-6 flex w-full justify-between rounded-lg py-6 pl-5 pr-24">
-          <div>
+        <Card className="mb-6 flex w-full justify-between rounded-lg gap-4 py-6 px-5 lg:pr-24">
+          <div className="sm:w-1/2">
             <div className="mb-4 text-2xl font-semibold text-black">
-              Add Salary Rewards
+              One Position. Different people. Different Salary?
             </div>
-            <div
-              className="cursor-pointer font-semibold text-[#2076FF]"
-              onClick={() => openSalaryModal()}
-            >
-              Add immediately
+            <div className="text-secondary">
+              <div className="my-2">What is the problem?</div>
+              <div className="font-semibold">
+                Submit your salary information anonymously and get token
+                rewards.
+              </div>
             </div>
           </div>
           <Image
             src="/assets/home_banner.webp"
             width={0}
             height={0}
-            className="object-cover lg:w-48 xl:w-64"
+            className="object-cover sm:w-2/5 lg:w-48 xl:w-64"
             unoptimized
             alt={""}
           ></Image>
@@ -143,16 +143,25 @@ export const Home = ({ defaultData }: IHomeProps) => {
             ))}
           </OverFlowXMore>
         </div>
-        {loading && (
-          <Card className="flex flex-col items-center py-8">
-            <CircularProgress />
-            <span className="mt-4">loading...</span>
-          </Card>
-        )}
+        <Card className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 p-8">
+          {loading &&
+            new Array(17).fill(0).map((item, itemIndex) => (
+              // <div
 
-        {!loading && (
-          <Card className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 p-8">
-            {(companyList || []).map((company) => (
+              //   className="flex cursor-pointer gap-4 rounded-lg border-4 border-[rgba(42,121,155,.05)] px-3 py-4"
+              // >
+              <Skeleton
+                key={itemIndex}
+                variant="rounded"
+                className="flex cursor-pointer gap-4"
+                // width="100%"
+                height={80}
+              />
+              // </div>
+            ))}
+
+          {!loading &&
+            (companyList || []).map((company) => (
               <div
                 key={`${company.currency}-${company.companyId}`}
                 className="flex cursor-pointer gap-4 rounded-lg border-4 border-[rgba(42,121,155,.05)] px-3 py-4"
@@ -188,8 +197,7 @@ export const Home = ({ defaultData }: IHomeProps) => {
                 </div>
               </div>
             ))}
-          </Card>
-        )}
+        </Card>
       </div>
       {AddSalaryUI}
     </DPageContainer>

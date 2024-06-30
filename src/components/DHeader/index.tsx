@@ -3,6 +3,8 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { ellipseAddress } from "@/utils";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { Button } from "@mui/material";
+import { useAddSalary } from "@/client/Home/components/AddSalary";
 
 const WalletDisconnectButtonDynamic = dynamic(
   async () =>
@@ -18,6 +20,9 @@ const WalletMultiButtonDynamic = dynamic(
 export const DHeader = () => {
   const { publicKey, connected, connect } = useWallet();
   const router = useRouter();
+  const { UI: AddSalaryUI, openModal: openSalaryModal } = useAddSalary(
+    () => {}
+  );
 
   return (
     <div className="flex w-full justify-between bg-white border-b px-6 py-3 sm:px-10 md:px-20">
@@ -37,7 +42,10 @@ export const DHeader = () => {
         <span className="font-bold text-xl">Dopp</span>
       </div>
       <div className="relative">
-        {connected && publicKey ? (
+        <Button variant="outlined" onClick={openSalaryModal}>
+          Submit Salary
+        </Button>
+        {/* {connected && publicKey ? (
           <WalletDisconnectButtonDynamic style={{ background: "#05A17E" }}>
             {ellipseAddress(publicKey.toBase58(), 8, 4)}
           </WalletDisconnectButtonDynamic>
@@ -45,7 +53,7 @@ export const DHeader = () => {
           <WalletMultiButtonDynamic style={{ background: "#05A17E" }}>
             Connect
           </WalletMultiButtonDynamic>
-        )}
+        )} */}
       </div>
     </div>
   );
