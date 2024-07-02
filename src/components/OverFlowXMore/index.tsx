@@ -7,7 +7,7 @@ const OverFlowXMore: React.FC<{
 }> = ({ children, onScroll }) => {
   const overflowX = React.useRef<HTMLDivElement>(null);
   const overflowWidth = React.useRef<HTMLDivElement>(null);
-  const [more, setMore] = React.useState(false);
+  const [more, setMore] = React.useState(true);
   const [before, setBefore] = React.useState(false);
   const onXscrollChange = (args: any) => {
     onScroll(args);
